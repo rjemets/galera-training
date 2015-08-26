@@ -1,0 +1,74 @@
+---
+  - name: Adjust file system soft limits for mysql user
+    lineinfile: dest=/etc/security/limits.conf backup=yes
+                regexp='mysql soft nofile' state=present
+                line='mysql soft nofile 65535'
+    tags:
+      - adjust_file_system_limits 
+
+  - name: Adjust file system hard limits for mysql user
+    lineinfile: dest=/etc/security/limits.conf backup=yes
+                regexp='mysql hard nofile' state=present
+                line='mysql hard nofile 65535'
+    tags:
+      - adjust_file_system_limits 
+
+  - name: Install EPEL repo
+    yum: name=epel-release enablerepo=base,updates state=present
+    tags:
+      - install_epel_repo
+
+  - name: Disable EPEL repo by default
+    ini_file: dest=/etc/yum.repos.d/epel.repo section=epel option=enabled value=0
+    tags:
+      - disable_epel_repo
+
+  - name: Install python pip
+    yum: name="python-pip" enablerepo=base,epel state=present
+    tags:
+      - install_pip
+
+  - name: Install MariaDB GPG key
+    rpm_key: state=present key=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+    tags:
+      - install_mariadb_repo
+
+  - name: Create MariaDB repo file
+    template: backup=yes dest=/etc/yum.repos.d/mariadb.repo group=root mode=644 owner=root
+              src=mariadb.repo.j2
+    tags:
+      - install_mariadb_repo
+
+  - name: Install RPMForge GPG key
+    rpm_key: state=present key=http://apt.sw.be/RPM-GPG-KEY.dag.txt
+    tags:
+      - install_rpmforge_repo
+
+  - name: Install RPMForge repo
+    yum: name=http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm state=present
+    tags:
+      - install_rpmforge_repo
+
+  - name: Install socat package
+    yum: enablerepo=epel name=socat state=latest 
+    tags:
+      - install_socat_package
+
+  - name: Install additional Perl packages
+    yum: name="{{ item }}" state=latest
+    with_items:
+      - perl-DBD-MySQL
+      - perl-TermReadKey
+    tags:
+      - install_perl_packages
+
+  - name: Install Percona GPG key
+    rpm_key: state=present key=https://www.percona.com/downloads/RPM-GPG-KEY-percona
+    tags:
+      - install_percona_repo
+
+  - name: Install Percona repo
+    yum: name=http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm state=present
+    tags:
+      - install_percona_repo
+

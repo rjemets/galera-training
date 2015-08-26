@@ -1,0 +1,5 @@
+{
+        "galera_server_id": "1",
+        "galera_node_name": "node1",
+        "galera_node_address": "192.168.x.x"
+}

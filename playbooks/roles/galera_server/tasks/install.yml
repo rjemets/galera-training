@@ -1,0 +1,19 @@
+---
+  - name: Install MariaDB packages
+    yum: name="{{ item }}" state=latest
+    with_items:
+      - MariaDB-Galera-server 
+      - MariaDB-client
+    tags:
+      - install_mariadb_packages
+
+  - name: Disable automatic mysql service start up
+    service: enabled=no name=mysql state=stopped
+    tags:
+      - install_mariadb_packages 
+      - disable_mysql_service
+
+  - name: Install Percona xtrabackup
+    yum: state=latest name=percona-xtrabackup
+    tags:
+      - install_percona_xtrabackup

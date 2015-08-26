@@ -1,0 +1,30 @@
+---
+  - hosts: "{{nodes}}"
+    tasks:
+      - name: Install Development Tools set of packages
+        yum: name="@Development Tools" state="latest"
+        tags: install_development_tools
+
+      - name: Install devel packages needed to build Python mysql extension
+        yum: name={{item}} state=latest
+        with_items:
+          - openssl-devel
+          - zlib-devel
+          - MariaDB-devel
+          - python-devel
+        tags: install_devel_packages
+
+      - name: Install Python MySQL module
+        pip: name=MySQL-python state=present
+        tags: install_python_mysql_module
+
+      - name: Create Galera replication user for the access from the private network
+        mysql_user: name=galera password="{{galera_sst_password}}" host="%" state=present
+                    priv=*.*:ALL
+        tags: create_galera_replication_user
+
+      - name: Create Galera replication user for the access from the localhost
+        mysql_user: name=galera password="{{galera_sst_password}}" host="localhost" state=present
+                    priv=*.*:ALL
+        tags: create_galera_replication_user
+

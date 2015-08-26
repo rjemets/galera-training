@@ -1,0 +1,7 @@
+---
+  - name: Set up MariaDB configuration
+    template: backup=yes dest=/etc/my.cnf.d/server.cnf group=root mode=644 owner=root
+              src=server.cnf.j2
+    tags:
+      - config_mariadb
+

@@ -1,0 +1,6 @@
+{
+        "galera_cluster_name": "cluster1",
+        "galera_sst_password": "galera",
+        "galera_cluster_address": "gcomm://"
+}
+
