@@ -9,4 +9,4 @@ Ansible playbooks for setting up a MariaDB Galera cluster.
 5. Run the playbooks/install_galera_server.yml against the whole server group or individual hosts using 'nodes' variable
    in the ansible-playbook command line.
 6. Bootstrap the first node and run the create_replication_user.yml against that host.
-7. Start up secondary cluster nodes and check the cluster's status.
+7. Start up secondary cluster nodes and check the cluster status.
